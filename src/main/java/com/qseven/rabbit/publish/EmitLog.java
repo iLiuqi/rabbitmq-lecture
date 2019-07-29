@@ -6,7 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 
 public class EmitLog {
 
-    private static final String EXCHANGE_NAME = "logs";
+    private static final String EXCHANGE_NAME = "ex-logs";
 
     public static void main(String[] args) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();

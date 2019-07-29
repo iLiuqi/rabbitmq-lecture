@@ -1,4 +1,4 @@
-package com.qseven.rabbit.queues2;
+package com.qseven.rabbit.queues;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -32,10 +32,13 @@ public class Worker {
                 e.printStackTrace();
             } finally {
                 System.out.println("Recv done!");
+                // 消费完成任务后，手动ACK，告知rabbitmq
+//                channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
             }
         };
 
-        channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {
+        boolean autoAck = false;
+        channel.basicConsume(QUEUE_NAME, autoAck, deliverCallback, consumerTag -> {
         });
     }
 

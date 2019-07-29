@@ -6,7 +6,7 @@ import com.rabbitmq.client.ConnectionFactory;
 
 public class TopicSend {
 
-    private static final String EXCHANGE_NAME = "topic_logs";
+    private static final String EXCHANGE_NAME = "ex-topic_logs";
 
     public static void main(String[] argv) {
         Connection connection = null;
@@ -21,13 +21,19 @@ public class TopicSend {
             channel.exchangeDeclare(EXCHANGE_NAME, "topic");
 
             // 待发送的消息
-            String[] routingKeys = new String[]{"quick.orange.rabbit", "lazy.orange.elephant", "quick.orange.fox",
-                    "lazy.brown.fox", "quick.brown.fox", "quick.orange.male.rabbit", "lazy.orange.male.rabbit"};
+            String[] routingKeys = new String[]{
+                    "quick.orange.rabbit",
+                    "lazy.orange.elephant",
+                    "quick.orange.fox",
+                    "lazy.brown.fox",
+                    "quick.brown.fox",
+                    "quick.orange.male.rabbit",
+                    "lazy.orange.male.rabbit"};
             // 发送消息
             for (String severity : routingKeys) {
-                String message = "From " + severity + " routingKey' s message!";
+                String message = "From < " + severity + " > routingKey' s message!";
                 channel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
-                System.out.println("TopicSend [x] Sent '" + severity + "':'" + message + "'");
+                System.out.println("TopicSend [x] Send :'" + message + "'");
             }
         } catch (Exception e) {
             e.printStackTrace();

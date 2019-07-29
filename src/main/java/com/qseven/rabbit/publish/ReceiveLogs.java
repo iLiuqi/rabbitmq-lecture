@@ -4,9 +4,9 @@ import com.rabbitmq.client.*;
 
 import java.nio.charset.StandardCharsets;
 
-public class ReceiveLogs1 {
+public class ReceiveLogs {
 
-    private static final String EXCHANGE_NAME = "logs";
+    private static final String EXCHANGE_NAME = "ex-logs";
 
     public static void main(String[] args) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -15,16 +15,17 @@ public class ReceiveLogs1 {
         Channel channel = connection.createChannel();
 
         channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
-        String queueName = channel.queueDeclare().getQueue();
+        String queueName = channel.queueDeclare().getQueue();   // 随机生成的一个队列名称
+        // queue exchange绑定
         channel.queueBind(queueName, EXCHANGE_NAME, "");
 
-        System.out.println("ReceiveLogs1 [*] Waiting for messages. To exit press CTRL+C");
+        System.out.println("ReceiveLogs [*] Waiting for messages. To exit press CTRL+C");
 
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
             public void handleDelivery(String consumerTag, Envelope envelope, AMQP.BasicProperties properties, byte[] body) {
                 String message = new String(body, StandardCharsets.UTF_8);
-                System.out.println("ReceiveLogs1 [x] Received '" + message + "'");
+                System.out.println("ReceiveLogs [x] Received '" + message + "'");
             }
         };
         channel.basicConsume(queueName, true, consumer);

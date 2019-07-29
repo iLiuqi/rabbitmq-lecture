@@ -4,9 +4,9 @@ import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-public class RoutingSendDirect {
+public class EmitLogDirect {
 
-    private static final String EXCHANGE_NAME = "direct_logs";
+    private static final String EXCHANGE_NAME = "ex-direct_logs";
     // 路由关键字
     private static final String[] routingKeys = new String[]{"info", "warning", "error"};
 
@@ -18,11 +18,18 @@ public class RoutingSendDirect {
         // 声明交换器
         channel.exchangeDeclare(EXCHANGE_NAME, "direct");
         // 发送消息
+/*
         for (String severity : routingKeys) {
-            String message = "Send the message level:" + severity;
+            String message = "Hello, my level is " + severity;
             channel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
-            System.out.println(" [x] Sent '" + severity + "':'" + message + "'");
+            System.out.println("Send '[" + severity + "]':'" + message + "'");
         }
+*/
+        String severity = routingKeys[1];
+        String message = "Hello, my level is " + severity;
+        channel.basicPublish(EXCHANGE_NAME, severity, null, message.getBytes());
+        System.out.println("Send '[" + severity + "]':'" + message + "'");
+
         channel.close();
         connection.close();
     }

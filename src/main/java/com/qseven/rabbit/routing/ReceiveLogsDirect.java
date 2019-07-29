@@ -4,12 +4,14 @@ import com.rabbitmq.client.*;
 
 import java.nio.charset.StandardCharsets;
 
-public class ReceiveLogsDirect2 {
+public class ReceiveLogsDirect {
 
     // 交换器名称
-    private static final String EXCHANGE_NAME = "direct_logs";
+    private static final String EXCHANGE_NAME = "ex-direct_logs";
     // 路由关键字
-    private static final String[] routingKeys = new String[]{"error"};
+    private static final String[] routingKeys1 = new String[]{"info"};
+    private static final String[] routingKeys2 = new String[]{"warning"};
+    private static final String[] routingKeys3 = new String[]{"info", "warning", "error"};
 
     public static void main(String[] argv) throws Exception {
         ConnectionFactory factory = new ConnectionFactory();
@@ -21,11 +23,11 @@ public class ReceiveLogsDirect2 {
 //		获取匿名队列名称
         String queueName = channel.queueDeclare().getQueue();
 //		根据路由关键字进行多重绑定
-        for (String severity : routingKeys) {
+        for (String severity : routingKeys2) {
             channel.queueBind(queueName, EXCHANGE_NAME, severity);
-            System.out.println("ReceiveLogsDirect2 exchange:" + EXCHANGE_NAME + ", queue:" + queueName + ", BindRoutingKey:" + severity);
+            System.out.println("ReceiveLogsDirect exchange:" + EXCHANGE_NAME + ", queue:" + queueName + ", BindRoutingKey:" + severity);
         }
-        System.out.println("ReceiveLogsDirect2 [*] Waiting for messages. To exit press CTRL+C");
+        System.out.println("ReceiveLogsDirect [*] Waiting for messages...");
 
         Consumer consumer = new DefaultConsumer(channel) {
             @Override
